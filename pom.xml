@@ -6,7 +6,7 @@
 
     <groupId>lk.ijse.dep</groupId>
     <artifactId>To-Do-List-Backend</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <name>To-Do-List-Backend</name>
     <packaging>war</packaging>
 
@@ -18,6 +18,17 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse</groupId>
+            <artifactId>yasson</artifactId>
+            <version>2.0.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
