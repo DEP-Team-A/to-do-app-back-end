@@ -2,6 +2,6 @@
 <Context>
     <Resource name="jdbc/pool_ToDoApp" auth="Container" type="javax.sql.DataSource"
               maxTotal="10" maxIdle="10"
-              username="root" password="mysql" driverClassName="com.mysql.cj.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/dep8_library"/>
+              username="root" password="root" driverClassName="com.mysql.cj.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/to_do_list_backend"/>
 </Context>
