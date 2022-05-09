@@ -1,14 +1,21 @@
 package lk.ijse.dep.todolistbackend.dto;
 
-public class ItemDTO {  private String id;
+public class ItemDTO {
+    private String id;
     private String description;
     private String email;
-    private Enum status;
+    private String status;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(String id, String description, String email, Enum status) {
+    public ItemDTO(String description, String email, String status) {
+        this.description = description;
+        this.email = email;
+        this.status = status;
+    }
+
+    public ItemDTO(String id, String description, String email, String status) {
         this.id = id;
         this.description = description;
         this.email = email;
@@ -39,13 +46,11 @@ public class ItemDTO {  private String id;
         this.email = email;
     }
 
-    public Enum getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Enum status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }
-
-
