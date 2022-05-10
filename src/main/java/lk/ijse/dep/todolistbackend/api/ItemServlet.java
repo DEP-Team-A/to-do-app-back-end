@@ -12,6 +12,7 @@ import javax.servlet.annotation.*;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 @WebServlet(name = "ItemServlet", value = "/items/*")
 public class ItemServlet extends HttpServlet {
@@ -26,9 +27,69 @@ if(request.getContentType()==null || !request.getContentType().toLowerCase().sta
     return;
 }
 
+    try (Connection connection = pool.getConnection()){
+
+        String userEmail =request.getPathInfo().replaceAll("/","");
+        System.out.println(userEmail);
+        String q = request.getParameter("q");
+        String query ="%"+((q==null) ? "":q)+"%";
+        System.out.println(query);
+        boolean pagination = request.getParameter("page")!=null && request.getParameter("size")!= null;
+
+        System.out.println(pagination);
+
+        String sql = "SELECT * FROM items WHERE email=? AND description LIKE ? "+((pagination) ? "LIMIT ? OFFSET ?":"");
+
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1,userEmail);
+        ps.setString(2,query);
+
+        String page =request.getParameter("page");
+        String size =request.getParameter("size");
+
+        if(pagination){
+            ps.setInt(3,Integer.parseInt(page));
+            ps.setInt(4,(Integer.parseInt(size)-1)*Integer.parseInt("size"));
+         }
+        PreparedStatement ps1 = connection.prepareStatement("SELECT count (*) FROM items WHERE email=? AND description LIKE ? ");
+ ps1.setString(1,userEmail);
+ ps1.setString(2,query);
+        ///  PreparedStatement ps = connection.prepareStatement("SELECT * FROM items");
+        ResultSet rst = ps.executeQuery();
+        ResultSet rst1 = ps1.executeQuery();
+     /*   if(!rst.next()){
+            response.sendError(HttpServletResponse.SC_NOT_FOUND,"ItemNot Found");
+            return;
+
+        }*/
+        ArrayList<ItemDTO> itemList =new ArrayList<>();
+        while (rst.next()){
+            ItemDTO itemDTO = new ItemDTO(rst.getString("description"), rst.getString("email"), rst.getString("status"));
+            itemList.add(itemDTO);
+        }
+
+        if(rst1.next()){
+            response.setHeader("X-Count",rst1.getString(1));
+            Jsonb jsonb = JsonbBuilder.create();
+            jsonb.toJson(itemList, response.getWriter());
+        }
+
+        response.setContentType("application/json");
 
 
+
+
+
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
+
+
+}
+
+
+
+
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
